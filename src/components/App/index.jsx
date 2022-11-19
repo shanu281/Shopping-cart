@@ -1,5 +1,6 @@
 import React from "react";
-import "./style.css"
+import "./style.css";
+import Data from "../Data/data";
 import Cart from "../Cart";
 import Aside from "../Aside";
 import Cards from "../Cards";
@@ -7,13 +8,14 @@ class App extends React.Component {
     constructor(props) {
         super(props)
         this.state = {
+            products: [],
             selectedSize: "",
             productIndex: "",
             activeSize: "",
             cartValue: [],
             cart: false,
             price: "",
-            quantity: 1,
+            sorted: ""
 
         }
     }
@@ -25,11 +27,12 @@ class App extends React.Component {
         console.log(this.state.activeSize)
     }
 
-    handleCart = (product) => {
+    handleAddToCart = (product) => {
         this.setState({
-            cartValue: [product].concat(this.state.cartValue)
-
+            cartValue: this.state.cartValue.concat({ ...product, quantity: 1 })
         })
+
+        console.log([product])
         console.log(this.state.cartValue)
 
     }
@@ -48,28 +51,54 @@ class App extends React.Component {
         })
     }
 
-    handleQuantityAdd = () => {
+    handleQuantityAdd = (id) => {
+        console.log('clicked')
+        const newCartValue = this.state.cartValue.map(item => {
+            if (item.id === id) {
+                return { ...item, quantity: item.quantity + 1 }
+            }
+            return item
+        })
         this.setState({
-            quantity: this.state.quantity + 1
+            cartValue: newCartValue
         })
     }
-    handleQuantityRemove = () => {
-        this.state.quantity > 1 ?
-            this.setState({
-                quantity: this.state.quantity - 1
-            }) : this.setState({
-                quantity: 1
-            })
+    handleQuantityRemove = (id, quantity) => {
+           if(quantity >1) { 
+        const newCartValue = this.state.cartValue.map(item => {
+            if (item.id === id) {
+                return { ...item, quantity: item.quantity - 1 }
+            }
+            return item
+        })
+
+        this.setState({
+            cartValue: newCartValue
+        })
+    } else {
+        const newCartValue = this.state.cartValue.filter(item => item.id != id)
+        this.setState({
+            cartValue : newCartValue
+        })
+    }
+} 
+    handleSorting = (event) => {
+        const value = event.target.value
+        this.setState({
+            sorted: value
+        })
+        console.log(value)
 
     }
 
     render() {
-        console.log(this.state.selectedSize)
+        let products = Data.products
+
         return (
             <>
                 <div className="container relative">
-                    <Aside handleSelectedSize={this.handleSelectedSize} activeSize={this.state.activeSize} />
-                    <Cards handleSelectedSize={this.handleSelectedSize} selectedSize={this.state.selectedSize} activeSize={this.state.activeSize} handleCart={this.handleCart} />
+                    <Aside handleSelectedSize={this.handleSelectedSize} activeSize={this.state.activeSize} handleSorting={this.handleSorting} products={this.state.products} />
+                    <Cards handleSelectedSize={this.handleSelectedSize} selectedSize={this.state.selectedSize} activeSize={this.state.activeSize} handleAddToCart={this.handleAddToCart} products={products} sorted={this.state.sorted} />
                     <Cart toggleCart={this.toggleCart} cart={this.state.cart} cartValue={this.state.cartValue} quantity={this.state.quantity} handleQuantityAdd={this.handleQuantityAdd} handleQuantityRemove={this.handleQuantityRemove} />
                 </div>
             </>

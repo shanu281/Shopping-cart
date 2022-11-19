@@ -21,7 +21,7 @@ class Aside extends React.Component {
                             )
                         }
                     </aside>
-                <Sort/>
+                <Sort handleSorting = {this.props.handleSorting}/>
                 </div>
             </>
         )

@@ -8,6 +8,7 @@ class Card extends React.Component {
         super(props)
     }
     render() {
+      
         return (
             <>
                 <div className="cards">
@@ -30,7 +31,7 @@ class Card extends React.Component {
                         </div>
                        
                       
-                   <button onClick={() => this.props.handleCart(this.props.product)} className="add">Add to cart</button>
+                   <button onClick={() => this.props.handleAddToCart(this.props.product)} className="add" >Add to cart</button>
                     </div>
                 </div>
             </>

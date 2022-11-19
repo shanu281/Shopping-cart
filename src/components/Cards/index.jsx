@@ -1,5 +1,4 @@
 import React from "react";
-import Data from "../Data/data";
 import "./style.css"
 import Card from "../Card";
 
@@ -9,7 +8,8 @@ class Cards extends React.Component {
         super(props)
     }
     render() {
-        let products = Data.products
+
+
         return (
             <>
                 <section className="main">
@@ -19,16 +19,18 @@ class Cards extends React.Component {
                     <div className="card-container">
                         {
                             this.props.activeSize === "" ?
-                                products.map((product, i) =>
-                                    <Card product={product} key={i} products={products} i={i} handleCart = {this.props.handleCart}/>
-                                ) :
+                                this.props.products.sort((a, b) => this.props.sorted === 'lowest' ? a.price - b.price : 'highest' ? b.price - a.price : +1 )
+                                    .map((product, i) =>
+                                        <Card product={product} key={i} products={this.props.products} i={i} handleAddToCart={this.props.handleAddToCart} />
+                                    ) :
 
-                                products.filter((product, i) =>
+                                this.props.products.filter((product, i) =>
                                     product.availableSizes.includes(this.props.activeSize)
-                                ).map((product, i) =>
-                                    <Card product={product} key={i} products={products} i={i} handleCart = {this.props.handleCart}/>
-                                    )
-                                }
+                                ).sort((a, b) => this.props.sorted === "lowest"? a.price - b.price :'highest' ? b.price - a.price : +1 )
+                                    .map((product, i) =>
+                                    <Card product={product} key={i} products={this.props.products} i={i} handleAddToCart={this.props.handleAddToCart} />
+                                )
+                        }
                     </div>
                 </section></>
         )
